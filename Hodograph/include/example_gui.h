@@ -30,6 +30,7 @@ private:
 
     void RenderGraphs();
     void RenderPositionGraphs();
+    void RenderPhaseonGraphs();
 
     std::shared_ptr<ifx::EngineGUI> engine_gui_;
     std::shared_ptr<HodographSimulation> hodograph_simulation_;

@@ -88,6 +88,10 @@ void ExampleGUI::RenderProperties(){
 
 void ExampleGUI::RenderGraphs(){
     RenderPositionGraphs();
+
+    ImGui::Begin("Phase");
+    RenderPhaseonGraphs();
+    ImGui::End();
 }
 
 void ExampleGUI::RenderPositionGraphs(){
@@ -121,4 +125,33 @@ void ExampleGUI::RenderPositionGraphs(){
                      0,
                      "a",
                      FLT_MAX, FLT_MAX, ImVec2(0,80));
+}
+
+void ExampleGUI::RenderPhaseonGraphs(){
+    std::vector<float>& positions
+            = hodograph_simulation_->hodograph_cache().positions_z;
+    std::vector<float>& velocities
+            = hodograph_simulation_->hodograph_cache().velocities_z;
+    const int MAX = 10000;
+
+    static ImVec4 col = ImVec4(1.0f,1.0f,0.4f,1.0f);
+    const ImU32 col32 = ImColor(col);
+
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    const ImVec2 p = ImGui::GetCursorScreenPos();
+
+    float scale = 80.0f;
+    float offset = 200.0f;
+    float offset_pos = 0.0f;
+    float offset_vel = 0.0f;
+    for(int i = 1; i < positions.size(); i++){
+        float x = p.x + offset + (positions[i-1] + offset_pos) * scale;
+        float y = p.y + offset + (velocities[i-1] + offset_vel)* scale;
+
+        float x1 = p.x + offset + (positions[i] + offset_pos) * scale;
+        float y1 = p.y + offset + (velocities[i] + offset_vel)* scale;
+        draw_list->AddLine(ImVec2(x, y),
+                           ImVec2(x1, y1), col32, 0.5f);
+        if (i > MAX) break;
+    }
 }
